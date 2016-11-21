@@ -173,16 +173,16 @@ public class UsersEndpoint  {
 
         UserLogin userLogin = new Gson().fromJson(decrypt, UserLogin.class);
 
-        String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
+       String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
 
         if (token != null) {
             //demo to check if it returns this on post.
             return Response
                 .status(200)
-                .entity(token)
+                    .entity(token)
                 .build();
         } else return Response
-            .status(401).entity("Wrong username og password")
+            .status(401)
             .build();
     }
 
