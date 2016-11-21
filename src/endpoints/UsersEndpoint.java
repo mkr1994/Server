@@ -178,9 +178,7 @@ public class UsersEndpoint  {
         if (token != null) {
             //demo to check if it returns this on post.
             return Response
-                .status(200)
-                    .entity(token)
-                .build();
+                .status(200).entity(token).build();
         } else return Response
             .status(401)
             .build();
