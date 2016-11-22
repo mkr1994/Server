@@ -130,7 +130,7 @@ public class DBConnector {
 
     public boolean editUser(User u) throws SQLException {
         PreparedStatement editUserStatement = conn
-                .prepareStatement("UPDATE Users SET First_Name = ?, Last_Name = ?, Username = ?, Email = ?, Usertype = ? WHERE userID =?");
+                .prepareStatement("UPDATE Users SET First_Name = ?, Last_Name = ?, Username = ?, Email = ?, Usertype = ?, Password = ? WHERE userID =?");
 
         try {
             editUserStatement.setString(1, u.getFirstName());
@@ -138,13 +138,17 @@ public class DBConnector {
             editUserStatement.setString(3, u.getUserName());
             editUserStatement.setString(4, u.getEmail());
             editUserStatement.setBoolean(5, u.getUserType());
-            editUserStatement.setInt(6, u.getUserID());
+            editUserStatement.setString(6, u.getPassword());
+            editUserStatement.setInt(7, u.getUserID());
+
 
             editUserStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return true;
+
     }
 
     public boolean addUser(User u) throws Exception {
