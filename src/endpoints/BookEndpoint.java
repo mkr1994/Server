@@ -3,7 +3,6 @@ package endpoints; /**
  */
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import controllers.BookController;
 import controllers.TokenController;
 import model.Book;
@@ -13,7 +12,6 @@ import Encrypters.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.List;
 
 // The Java class will be hosted at the URI path "/Book"
 
@@ -34,11 +32,6 @@ public class BookEndpoint {
 
 
         ArrayList<Book> bookArrayList = new ArrayList<>();
-
-
-
-//
-
 
 
         if (controller.getBooks()!=null) {

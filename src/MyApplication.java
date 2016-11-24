@@ -10,7 +10,7 @@ import endpoints.CrypterEndpoint;
 import endpoints.BookEndpoint;
 import endpoints.CurriculumEndpoint;
 import endpoints.UsersEndpoint;
-import model.Curriculum;
+import view.AdminInterface;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
@@ -24,40 +24,43 @@ import java.util.Set;
 @ApplicationPath("/")
 public class MyApplication extends Application {
 
-  private void initConfig() {
 
-    Gson gson = new Gson();
-    BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("/config.json")));
-    ConfigMap config = gson.fromJson(br, ConfigMap.class);
+    private void initConfig () {
 
-    Config.setDbName(config.getDbName());
-    Config.setDbPassword(config.getDbPassword());
-    Config.setDbPort(config.getDbPort());
-    Config.setDbUrl(config.getDbUrl());
-    Config.setDbUserName(config.getDbUserName());
+      Gson gson = new Gson();
+      BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("/config.json")));
+      ConfigMap config = gson.fromJson(br, ConfigMap.class);
 
-  }
+      Config.setDbName(config.getDbName());
+      Config.setDbPassword(config.getDbPassword());
+      Config.setDbPort(config.getDbPort());
+      Config.setDbUrl(config.getDbUrl());
+      Config.setDbUserName(config.getDbUserName());
 
-  //The method returns a non-empty collection with classes, that must be included in the published JAX-RS application
-  @Override
-  public Set<Class<?>> getClasses() {
+    }
 
-    this.initConfig();
+    //The method returns a non-empty collection with classes, that must be included in the published JAX-RS application
+    @Override
+    public Set<Class<?>> getClasses () {
 
-    HashSet h = new HashSet<Class<?>>();
-    h.add(UsersEndpoint.class);
-    h.add(BookEndpoint.class);
-    h.add(CurriculumEndpoint.class);
-    h.add(HashingEndpoint.class);
-    h.add(CrypterEndpoint.class);
-    return h;
-  }
+      this.initConfig();
 
-  //This is unnecessary and doesn't work.
+      HashSet h = new HashSet<Class<?>>();
+      h.add(UsersEndpoint.class);
+      h.add(BookEndpoint.class);
+      h.add(CurriculumEndpoint.class);
+      h.add(HashingEndpoint.class);
+      h.add(CrypterEndpoint.class);
+      h.add(AdminInterface.class);
+      return h;
+    }
+
   @GET
   @Produces("text/plain")
   public String demo() {
     return "This is root!";
   }
+
+
 }
 

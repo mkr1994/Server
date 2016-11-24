@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import controllers.TokenController;
 import controllers.UserController;
 import model.User;
-import model.UserLogin;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -171,7 +170,7 @@ public class UsersEndpoint  {
         String decrypt = Crypter.encryptDecryptXOR(data); //Fjernes når din klient krypterer.
         //decrypt = Crypter.encryptDecryptXOR(decrypt);
 
-        UserLogin userLogin = new Gson().fromJson(decrypt, UserLogin.class);
+        User userLogin = new Gson().fromJson(decrypt, User.class);
 
        String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
 

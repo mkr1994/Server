@@ -25,8 +25,7 @@ public class Book {
         this.priceCDON = priceCDON;
     }
 
-    public Book(String publisher, String title, String author, int version, double ISBN, double priceAB, double priceSAXO, double priceCDON, int curriculumID) {
-        this.curriculumID = curriculumID;
+    public Book(String publisher, String title, String author, int version, double ISBN, double priceAB, double priceSAXO, double priceCDON) {
         this.publisher = publisher;
         this.title = title;
         this.author = author;

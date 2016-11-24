@@ -26,7 +26,6 @@ public class DBConnector {
     static final String USER = Config.getDbUserName();
     static final String PASS = Config.getDbPassword();
 
-    //String sql; Not needed anymore after introducing prepared statements.
     Connection conn = null;
     Statement stmt = null;
 
