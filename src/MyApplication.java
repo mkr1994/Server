@@ -2,11 +2,9 @@
  * Created by mortenlaursen on 09/10/2016.
  */
 
-import endpoints.HashingEndpoint;
 import com.google.gson.Gson;
 import config.Config;
 import config.ConfigMap;
-import endpoints.CrypterEndpoint;
 import endpoints.BookEndpoint;
 import endpoints.CurriculumEndpoint;
 import endpoints.UsersEndpoint;
@@ -49,8 +47,6 @@ public class MyApplication extends Application {
       h.add(UsersEndpoint.class);
       h.add(BookEndpoint.class);
       h.add(CurriculumEndpoint.class);
-      h.add(HashingEndpoint.class);
-      h.add(CrypterEndpoint.class);
       h.add(AdminInterface.class);
       return h;
     }

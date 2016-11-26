@@ -60,7 +60,7 @@ public class CurriculumController {
 
     public boolean addCurriculumBook(String data) throws SQLException {
         DBConnector db = new DBConnector();
-       // boolean addCurriculumBook = db.addCurriculumBook(data);
+      //  boolean addCurriculumBook = db.addCurriculumBook(data);
         db.close();
         return true;
     }

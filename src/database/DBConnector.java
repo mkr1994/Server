@@ -166,6 +166,7 @@ public class DBConnector {
             addUserStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -179,6 +180,7 @@ public class DBConnector {
             deleteUserStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -206,9 +208,7 @@ public class DBConnector {
 
                     String test = resultSet.getString("School");
                 } catch (Exception e) {
-                    Integer test = resultSet.getInt("CurriculumID");
-
-                    System.out.println(test + "WORKS");
+                    e.printStackTrace();
                 }
             }
         } catch (SQLException sqlException) {
@@ -263,6 +263,7 @@ public class DBConnector {
             editCurriculumStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -280,6 +281,7 @@ public class DBConnector {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -292,6 +294,7 @@ public class DBConnector {
             deleteUserStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -417,6 +420,7 @@ public class DBConnector {
             editBookStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -449,6 +453,7 @@ public class DBConnector {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
         return true;
@@ -466,11 +471,12 @@ public class DBConnector {
             deleteUserStatement.executeUpdate();
 
             deleteBooksCurriculumRows.setInt(1, id);
-            deleteBooksCurriculumRows.execute();
+            deleteBooksCurriculumRows.executeQuery();
 
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -561,6 +567,7 @@ public class DBConnector {
             deleteTokenStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         return true;
     }

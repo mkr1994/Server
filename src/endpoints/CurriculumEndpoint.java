@@ -22,7 +22,7 @@ public class CurriculumEndpoint {
     TokenController tokenController = new TokenController();
 
 
-    public CurriculumEndpoint(){
+    public CurriculumEndpoint() {
 
         curriculumController = new CurriculumController();
     }
@@ -30,6 +30,7 @@ public class CurriculumEndpoint {
 
     /**
      * Metode til at hente alle bøgerne på et semester
+     *
      * @param curriculumID
      * @return
      * @throws IllegalAccessException
@@ -47,15 +48,16 @@ public class CurriculumEndpoint {
                     .build(); //kør
         } else {
             return Response
-                //error response
-                .status(400)
-                .entity("{\"message\":\"failed\"}")
-                .build();
-    }
+                    //error response
+                    .status(400)
+                    .entity("{\"message\":\"failed\"}")
+                    .build();
+        }
     }
 
     /**
      * Metode til at hente alle semestre
+     *
      * @return
      * @throws IllegalAccessException
      */
@@ -80,6 +82,7 @@ public class CurriculumEndpoint {
 
     /**
      * Metode til at hente et bestemt semester
+     *
      * @param id
      * @return
      * @throws IllegalAccessException
@@ -107,6 +110,7 @@ public class CurriculumEndpoint {
 
     /**
      * Metode til at oprette nyt semester
+     *
      * @param data
      * @return
      * @throws Exception
@@ -114,25 +118,32 @@ public class CurriculumEndpoint {
 
     @POST
     @Produces("application/json")
-    public Response create(String data) throws Exception {
-        String s = new Gson().fromJson(data,String.class);
-        String decrypt = Crypter.encryptDecryptXOR(s);
-        if (curriculumController.addCurriculum(decrypt)) {
-            //demo to check if it returns this on post.
-            return Response
-                    .status(200)
-                    //nedenstående skal formentlig laves om. Den skal ikke returne curriculums. Lavet for at checke
-                    //at den skriver til db.
-                    .entity(new Gson().toJson(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculums()))))
-                    .build();
-        }
-        else return Response
-                .status(400)
-                .entity("{\"message\":\"Failed.\"}")
-                .build();
+    public Response create(@HeaderParam("authorization") String authToken, String data) throws Exception {
+        User user = tokenController.getUserFromTokens(authToken);
+
+
+        if (user != null) {
+            String decrypt = Crypter.encryptDecryptXOR(data);
+            if (curriculumController.addCurriculum(decrypt)) {
+                return Response
+                        .status(200)
+                        .entity("Success!")
+                        .build();
+            }
+            else {
+                return Response
+                        .status(400)
+                        //nedenstående skal formentlig laves om. Den skal ikke returne curriculums. Lavet for at checke
+                        //at den skriver til db.
+                        .build();
+            }
+
+        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 
-    @POST
+
+
+   /* @POST
     @Path("/{curriculumID}/book")
     @Produces("application/json")
 
@@ -158,7 +169,7 @@ public class CurriculumEndpoint {
             }
 
         }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
-    }
+    }*/
     /**
      * Metode til at ændre et semester
      * @return

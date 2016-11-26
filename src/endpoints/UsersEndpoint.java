@@ -2,11 +2,11 @@ package endpoints; /**
  * Created by mortenlaursen on 09/10/2016.
  */
 
-import Encrypters.*;
 import com.google.gson.Gson;
 import controllers.TokenController;
 import controllers.UserController;
 import model.User;
+import Encrypters.Crypter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

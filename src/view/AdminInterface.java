@@ -1,10 +1,7 @@
 package view;
 
 import Encrypters.Digester;
-import config.Config;
-import controllers.UserController;
 import database.DBConnector;
-import endpoints.UsersEndpoint;
 import model.Book;
 import model.User;
 
