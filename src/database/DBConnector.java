@@ -56,9 +56,14 @@ public class DBConnector {
         }
     }
 
-    /*5 user methods*/
-
-    public ArrayList getUsers() throws IllegalArgumentException {
+    /**
+     * Returns all users that isnt deleted
+     *
+     * @return
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
+    public ArrayList getUsers() throws IllegalArgumentException, SQLException {
         ArrayList results = new ArrayList();
         ResultSet resultSet = null;
 
@@ -87,17 +92,27 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return results;
 
     }
 
-    public User getUser(int id) throws IllegalArgumentException {
+    /**
+     * Returns a single user
+     *
+     * @param id
+     * @return
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
+    public User getUser(int id) throws IllegalArgumentException, SQLException {
         User user = null;
         ResultSet resultSet = null;
 
         try {
-            PreparedStatement getUser = conn.prepareStatement("SELECT * FROM Users WHERE UserID=?");
+            PreparedStatement getUser = conn.prepareStatement("SELECT * FROM Users WHERE UserID=? and Deleted = 0");
             getUser.setInt(1, id);
             resultSet = getUser.executeQuery();
 
@@ -116,17 +131,26 @@ public class DBConnector {
                     );
 
                 } catch (Exception e) {
-
+                    System.out.println(e.getMessage());
                 }
             }
 
 
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return user;
     }
 
+    /**
+     * Method for editing a users information
+     *
+     * @param u
+     * @return
+     * @throws SQLException
+     */
     public boolean editUser(User u) throws SQLException {
         PreparedStatement editUserStatement = conn
                 .prepareStatement("UPDATE Users SET First_Name = ?, Last_Name = ?, Username = ?, Email = ?, Usertype = ?, Password = ? WHERE userID =?");
@@ -142,14 +166,24 @@ public class DBConnector {
 
 
             editUserStatement.executeUpdate();
-            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
 
+        return true;
     }
 
+    /**
+     * Method for adding an user
+     *
+     * @param u
+     * @return
+     * @throws Exception
+     */
     public boolean addUser(User u) throws Exception {
 
         PreparedStatement addUserStatement =
@@ -167,10 +201,19 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
+    /**
+     * Method for deleting an user, by setting "Deleted" =1
+     *
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     public boolean deleteUser(int id) throws SQLException {
 
         PreparedStatement deleteUserStatement = conn.prepareStatement("UPDATE Users SET Deleted = 1 WHERE UserID=?");
@@ -182,11 +225,20 @@ public class DBConnector {
             e.printStackTrace();
             return false;
         }
+            close();
+
         return true;
     }
 
     /*Curriculum methods*/
-    public ArrayList getCurriculums() throws IllegalArgumentException {
+
+    /**
+     * Returns all curriculums
+     *
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public ArrayList getCurriculums() throws IllegalArgumentException, SQLException {
         ArrayList<Curriculum> results = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -213,12 +265,21 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return results;
 
     }
 
-    public Curriculum getCurriculum(int curriculumID) throws IllegalArgumentException {
+    /**
+     * Methos for returning a single curriculum
+     *
+     * @param curriculumID
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public Curriculum getCurriculum(int curriculumID) throws IllegalArgumentException, SQLException {
         ResultSet resultSet = null;
         Curriculum curriculum = null;
 
@@ -244,15 +305,25 @@ public class DBConnector {
         } catch (SQLException sqlException) {
 
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return curriculum;
 
     }
 
+    /**
+     * Methos for editing a curriculum
+     *
+     * @param id
+     * @param data
+     * @return
+     * @throws SQLException
+     */
     public boolean editCurriculum(int id, String data) throws SQLException {
         PreparedStatement editCurriculumStatement = conn.prepareStatement("UPDATE Curriculum SET School = ?, Education = ?, Semester = ? WHERE curriculumID = ?");
 
-        Curriculum c = new Gson().fromJson(data,Curriculum.class);
+        Curriculum c = new Gson().fromJson(data, Curriculum.class);
 
         try {
             editCurriculumStatement.setString(1, c.getSchool());
@@ -264,10 +335,19 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
+    /**
+     * Method for adding a curriculum
+     *
+     * @param c
+     * @return
+     * @throws SQLException
+     */
     public boolean addCurriculum(Curriculum c) throws SQLException {
         PreparedStatement addCurriculumStatement = conn.prepareStatement("INSERT INTO Curriculum (School, Education, Semester) VALUES (?, ?, ?)");
 
@@ -282,25 +362,39 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
+    /**
+     * Method for deleting a curriculum by setting "Deleted" = 1
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     public boolean deleteCurriculum(int id) throws SQLException {
-        PreparedStatement deleteUserStatement = conn.prepareStatement("UPDATE Curriculum SET Deleted = 1 WHERE CurriculumID=?");
+        PreparedStatement deleteCurriculumStatement = conn.prepareStatement("UPDATE Curriculum SET Deleted = 1 WHERE CurriculumID=?");
 
         try {
-            deleteUserStatement.setInt(1, id);
-            deleteUserStatement.executeUpdate();
+            deleteCurriculumStatement.setInt(1, id);
+            deleteCurriculumStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
-    //skal skiftes
-    public ArrayList<Book> getCurriculumBooks(int curriculumID) {
+    /**
+     * Returns the Books in a specific curriculum
+     * @param curriculumID
+     * @return
+     */
+    public ArrayList<Book> getCurriculumBooks(int curriculumID) throws SQLException {
         ArrayList results = new ArrayList();
         ResultSet resultSet = null;
 
@@ -310,7 +404,7 @@ public class DBConnector {
             getCurriculumBooks.setInt(1, curriculumID);
             resultSet = getCurriculumBooks.executeQuery();
 
-            while ( resultSet.next() ) {
+            while (resultSet.next()) {
                 try {
 
                     Book books = new Book(
@@ -327,20 +421,27 @@ public class DBConnector {
 
                     results.add(books);
 
-                }catch(Exception e){
+                } catch (Exception e) {
 
                 }
             }
-        }
-        catch ( SQLException sqlException ){
+        } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return results;
     }
 
     /*books methods*/
 
-    public ArrayList getBooks() throws IllegalArgumentException {
+    /**
+     * Returns all books that isn't deleted
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public ArrayList getBooks() throws IllegalArgumentException, SQLException {
+
         ArrayList<Book> results = new ArrayList<>();
         ResultSet resultSet = null;
 
@@ -371,11 +472,19 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
+        } finally {
+            close();
         }
         return results;
 
     }
 
+    /**
+     * Returns a single book
+     * @param id
+     * @return
+     * @throws IllegalArgumentException
+     */
     public Book getBook(int id) throws IllegalArgumentException {
         Book book = null;
         ResultSet resultSet = null;
@@ -403,6 +512,13 @@ public class DBConnector {
 
     }
 
+    /**
+     * Method used to edit book information
+     * @param id
+     * @param data
+     * @return
+     * @throws SQLException
+     */
     public boolean editBook(int id, String data) throws SQLException {
         PreparedStatement editBookStatement = conn.prepareStatement("UPDATE Books SET Title = ?, Version = ?, ISBN = ?, PriceAB = ?, PriceSAXO = ?, PriceCDON = ?, Publisher = ?, Author = ? WHERE bookID =?");
         Book b = new Gson().fromJson(data, Book.class);
@@ -421,15 +537,22 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
+    /**
+     * Lets you create a new book and adds the book to the BooksCurriculum table.
+     * @param b
+     * @return
+     * @throws SQLException
+     */
     public boolean addCurriculumBook(Book b) throws SQLException {
         int id;
         PreparedStatement addBookStatement = conn.prepareStatement("INSERT INTO Books (Title, Version, ISBN, PriceAB, PriceSAXO, PriceCDON, Publisher, Author) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-        //Book b = new Gson().fromJson(data, Book.class);
         try {
             addBookStatement.setString(1, b.getTitle());
             addBookStatement.setInt(2, b.getVersion());
@@ -443,7 +566,7 @@ public class DBConnector {
             addBookStatement.executeUpdate();
             ResultSet rs = addBookStatement.getGeneratedKeys();
 
-            if(rs.next()){
+            if (rs.next()) {
                 id = rs.getInt(1);
 
                 PreparedStatement addToBooksCurriculum = conn.prepareStatement("INSERT INTO BooksCurriculum (BookID, CurriculumID) VALUES (?,?)");
@@ -454,6 +577,8 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
 
         return true;
@@ -461,7 +586,12 @@ public class DBConnector {
     }
 
 
-
+    /**
+     * Method for deleting a book.
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     public boolean deleteBook(int id) throws SQLException {
         PreparedStatement deleteUserStatement = conn.prepareStatement("UPDATE Books SET Deleted = 1 WHERE BookID = ?");
         PreparedStatement deleteBooksCurriculumRows = conn.prepareStatement("DELETE FROM BooksCurriculum WHERE BookID = ?");
@@ -477,11 +607,19 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
-    public User authenticate(String username, String password) {
+    /**
+     * Authentiates an user and returns the user's info.
+     * @param username
+     * @param password
+     * @return
+     */
+    public User authenticate(String username, String password) throws SQLException {
 
         ResultSet resultSet = null;
         User userFound = null;
@@ -513,22 +651,27 @@ public class DBConnector {
 
     }
 
+    /**
+     * Used to check if the users token is ecists and is valid.
+     * @param token
+     * @return
+     * @throws SQLException
+     */
     public User getUserFromToken(String token) throws SQLException {
         ResultSet resultSet = null;
         User userFromToken = null;
 
 
-
         try {
 
             PreparedStatement getUserFromToken = conn
-                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.Created >= DATE_SUB(NOW(), interval 1 hour)");
+                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 1 minute)");
             getUserFromToken.setString(1, token);
             resultSet = getUserFromToken.executeQuery();
 
             while (resultSet.next()) {
 
-               userFromToken = new User(
+                userFromToken = new User(
                         resultSet.getInt("UserID"),
                         resultSet.getString("First_Name"),
                         resultSet.getString("Last_Name"),
@@ -537,6 +680,11 @@ public class DBConnector {
                         resultSet.getString("Password"),
                         resultSet.getBoolean("Usertype"));
 
+            }
+            if(userFromToken != null){
+                PreparedStatement updateTimeStamp = conn.prepareStatement("UPDATE Tokens set UpdateTs = CURRENT_TIMESTAMP where token = ? ");
+                updateTimeStamp.setString(1, token);
+                updateTimeStamp.executeUpdate();
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
@@ -555,6 +703,8 @@ public class DBConnector {
             addTokenStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            close();
         }
     }
 
@@ -568,11 +718,13 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            close();
         }
         return true;
     }
 
-    public void close(){
+    public void close() {
         try {
             this.conn.close();
         } catch (SQLException e) {

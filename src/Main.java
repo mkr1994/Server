@@ -1,5 +1,5 @@
 import config.Config;
-import view.AdminInterface;
+import view.AdminView;
 
 import java.sql.SQLException;
 
@@ -16,7 +16,8 @@ public class Main {
         Config.setDbPassword("1234");
         Config.setDbUserName("root");
 
-        AdminInterface adminInterface = new AdminInterface();
+        AdminView adminInterface = new AdminView();
+
         try {
             adminInterface.menu();
         } catch (SQLException e) {

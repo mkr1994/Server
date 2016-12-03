@@ -38,7 +38,7 @@ public class CurriculumEndpoint {
     @GET
     @Path("/{curriculumID}/books")
     @Produces("application/json")
-    public Response getCurriculumBooks(@PathParam("curriculumID") int curriculumID) throws IllegalAccessException {
+    public Response getCurriculumBooks(@PathParam("curriculumID") int curriculumID) throws Exception {
 
         if (curriculumController.getCurriculum(curriculumID) != null) {
             return Response
@@ -63,7 +63,7 @@ public class CurriculumEndpoint {
      */
     @GET
     @Produces("application/json")
-    public Response get() throws IllegalAccessException {
+    public Response get() throws Exception {
 
         if (curriculumController.getCurriculums() != null) {
             return Response
@@ -90,7 +90,7 @@ public class CurriculumEndpoint {
     @GET
     @Path("/{curriculumID}")
     @Produces("application/json")
-    public Response get(@PathParam("curriculumID") int id) throws IllegalAccessException {
+    public Response get(@PathParam("curriculumID") int id) throws Exception {
 
 
         if (curriculumController.getCurriculums() != null) {
@@ -133,8 +133,6 @@ public class CurriculumEndpoint {
             else {
                 return Response
                         .status(400)
-                        //nedenstående skal formentlig laves om. Den skal ikke returne curriculums. Lavet for at checke
-                        //at den skriver til db.
                         .build();
             }
 

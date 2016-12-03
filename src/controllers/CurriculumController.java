@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class CurriculumController {
 
 
-    public ArrayList<Curriculum> getCurriculums()throws IllegalAccessException{
+    public ArrayList<Curriculum> getCurriculums() throws IllegalAccessException, SQLException {
         DBConnector db = new DBConnector();
         ArrayList<Curriculum> curriculums = db.getCurriculums();
         db.close();
         return curriculums;
     }
 
-    public Curriculum getCurriculum(int id) {
+    public Curriculum getCurriculum(int id) throws SQLException {
     DBConnector db = new DBConnector();
     Curriculum curriculum = db.getCurriculum(id);
     db.close();
@@ -50,7 +50,7 @@ public class CurriculumController {
         return addCurriculum;
     }
 
-    public ArrayList<Book> getCurriculumBooks(int curriculumID) {
+    public ArrayList<Book> getCurriculumBooks(int curriculumID) throws SQLException {
         DBConnector db = new DBConnector();
         ArrayList<Book> curricilumBooks = db.getCurriculumBooks(curriculumID);
         db.close();

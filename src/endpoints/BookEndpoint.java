@@ -30,17 +30,13 @@ public class BookEndpoint {
     @Produces("application/json")
     public Response get() throws Exception {
 
-
-        ArrayList<Book> bookArrayList = new ArrayList<>();
-
-
-        if (controller.getBooks()!=null) {
+        ArrayList<Book> bookArrayList = controller.getBooks();
+        if (bookArrayList != null) {
             return Response
                     .status(200)
-                    .entity(Crypter.encryptDecryptXOR(new Gson().toJson(controller.getBooks())))
+                    .entity(Crypter.encryptDecryptXOR(new Gson().toJson(bookArrayList)))
                     .build();
-        }
-        else {
+        } else {
             return Response
                     .status(400)
                     .entity("{\"message\":\"failed\"}")
@@ -53,13 +49,12 @@ public class BookEndpoint {
     @Produces("application/json")
     @GET
     public Response get(@PathParam("id") int bookId) throws Exception {
-        if (controller.getBook(bookId)!=null) {
+        if (controller.getBook(bookId) != null) {
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(controller.getBook(bookId))))
                     .build();
-        }
-        else {
+        } else {
             return Response
                     .status(400)
                     .entity("{\"message\":\"failed\"}")
@@ -75,10 +70,10 @@ public class BookEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
+        if (user != null) {
 
             if (controller.getBook(id) != null) {
-                String s = new Gson().fromJson(data,String.class);
+                String s = new Gson().fromJson(data, String.class);
                 String decrypt = Crypter.encryptDecryptXOR(s);
                 if (controller.editBook(id, decrypt)) {
                     return Response
@@ -98,47 +93,46 @@ public class BookEndpoint {
                         .build();
             }
 
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
 
 
     }
 
-   @POST
+    @POST
     @Produces("application/json")
     public Response create(@HeaderParam("authorization") String authToken, String data) throws Exception {
-       String decrypt = Crypter.encryptDecryptXOR(data);
+        String decrypt = Crypter.encryptDecryptXOR(data);
 
-       User user = tokenController.getUserFromTokens(authToken);
+        User user = tokenController.getUserFromTokens(authToken);
 
-       if (user != null) {
-           if (controller.addBook(decrypt)) {
-               return Response
-                       .status(200)
-                       .entity("{\"message\":\"Success! Book created\"}")
-                       .build();
-           } else {
-               return Response
-                       .status(400)
-                       .entity("{\"message\":\"failed\"}")
-                       .build();
-           }
-       } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        if (user != null) {
+            if (controller.addBook(decrypt)) {
+                return Response
+                        .status(200)
+                        .entity("{\"message\":\"Success! Book created\"}")
+                        .build();
+            } else {
+                return Response
+                        .status(400)
+                        .entity("{\"message\":\"failed\"}")
+                        .build();
+            }
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 
 
     @Path("/{id}")
     @DELETE
-    public Response delete (@HeaderParam("authorization") String authToken, @PathParam("id") int bookId) throws Exception {
+    public Response delete(@HeaderParam("authorization") String authToken, @PathParam("id") int bookId) throws Exception {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
+        if (user != null) {
 
-            if(controller.deleteBook(bookId)) {
+            if (controller.deleteBook(bookId)) {
                 return Response.status(200).entity("{\"message\":\"Success! Book deleted\"}").build();
-            }
-            else return Response.status(400).entity("{\"message\":\"failed\"}").build();
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+            } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
 
 
     }

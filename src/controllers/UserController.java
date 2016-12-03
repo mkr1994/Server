@@ -13,15 +13,16 @@ import java.util.ArrayList;
  */
 public class UserController {
   Gson gson;
-  DBConnector db = new DBConnector();
+  DBConnector db;
 
 
   public UserController() {
     this.gson = new Gson();
+    this.db = new DBConnector();
   }
 
 
-  public ArrayList<User> getUsers() {
+  public ArrayList<User> getUsers() throws SQLException {
     DBConnector db = new DBConnector();
     ArrayList<User> users = db.getUsers();
     db.close();
@@ -29,7 +30,7 @@ public class UserController {
 
   }
 
-  public User getUser(int id) {
+  public User getUser(int id) throws SQLException {
     DBConnector db = new DBConnector();
     User user = db.getUser(id);
     db.close();

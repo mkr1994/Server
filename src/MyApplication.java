@@ -8,7 +8,7 @@ import config.ConfigMap;
 import endpoints.BookEndpoint;
 import endpoints.CurriculumEndpoint;
 import endpoints.UsersEndpoint;
-import view.AdminInterface;
+import view.AdminView;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
@@ -47,7 +47,7 @@ public class MyApplication extends Application {
       h.add(UsersEndpoint.class);
       h.add(BookEndpoint.class);
       h.add(CurriculumEndpoint.class);
-      h.add(AdminInterface.class);
+      h.add(AdminView.class);
       return h;
     }
 

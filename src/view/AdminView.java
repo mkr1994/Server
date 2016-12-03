@@ -13,7 +13,7 @@ import java.util.Scanner;
 /**
  * Created by magnusrasmussen on 24/11/2016.
  */
-public class AdminInterface {
+public class AdminView {
 
     DBConnector dbConnector = new DBConnector();
     Scanner input = new Scanner(System.in);
@@ -85,7 +85,7 @@ public class AdminInterface {
         }
     }
 
-    public void deleteUser(){
+    public void deleteUser() throws SQLException {
         input.nextLine();
         int userId = 0;
 
