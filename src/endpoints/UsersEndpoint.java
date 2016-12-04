@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 // implements IEndpoints The Java class will be hosted at the URI path "/users"
 @Path("/user")
-public class UsersEndpoint  {
+public class UsersEndpoint {
     UserController controller = new UserController();
     TokenController tokenController = new TokenController();
 

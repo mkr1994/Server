@@ -7,9 +7,9 @@ import model.Book;
 import java.util.ArrayList;
 
 public class BookController {
+    DBConnector db = new DBConnector();
 
     public ArrayList<Book> getBooks() throws Exception {
-        DBConnector db = new DBConnector();
         ArrayList<Book> books = db.getBooks();
         db.close();
         return books;
@@ -39,6 +39,7 @@ public class BookController {
     public boolean addBook(String data) throws Exception {
         DBConnector db = new DBConnector();
         Book b = new Gson().fromJson(data, Book.class);
+        db.close();
         return db.addCurriculumBook(b);
     }
 

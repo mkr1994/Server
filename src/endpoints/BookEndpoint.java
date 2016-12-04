@@ -13,15 +13,20 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
+
 // The Java class will be hosted at the URI path "/Book"
 
 @Path("/book")
-public class BookEndpoint {
+public  class BookEndpoint {
 
-    BookController controller = new BookController();
-    TokenController tokenController = new TokenController();
+    BookController controller;
+    TokenController tokenController;
+    Gson gson;
 
     public BookEndpoint() {
+        this.controller = new BookController();
+        this.tokenController = new TokenController();
+        this.gson = new Gson();
     }
 
     // The Java method will process HTTP GET requests
@@ -34,7 +39,7 @@ public class BookEndpoint {
         if (bookArrayList != null) {
             return Response
                     .status(200)
-                    .entity(Crypter.encryptDecryptXOR(new Gson().toJson(bookArrayList)))
+                    .entity(Crypter.encryptDecryptXOR(gson.toJson(bookArrayList)))
                     .build();
         } else {
             return Response

@@ -29,7 +29,9 @@ public class DBConnector {
     Connection conn = null;
     Statement stmt = null;
 
+
     public DBConnector() {
+
 
         try {
             //STEP 2: Register JDBC driver
@@ -40,8 +42,6 @@ public class DBConnector {
 
             //STEP 4: Execute a query
             this.stmt = conn.createStatement();
-
-            System.out.println("Connected");
 
             //STEP 6: Clean-up environment
         } catch (SQLException se) {
@@ -54,6 +54,8 @@ public class DBConnector {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -92,8 +94,6 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return results;
 
@@ -138,8 +138,6 @@ public class DBConnector {
 
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return user;
     }
@@ -170,8 +168,6 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
 
         return true;
@@ -201,8 +197,6 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
@@ -225,7 +219,6 @@ public class DBConnector {
             e.printStackTrace();
             return false;
         }
-            close();
 
         return true;
     }
@@ -265,8 +258,6 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return results;
 
@@ -305,8 +296,6 @@ public class DBConnector {
         } catch (SQLException sqlException) {
 
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return curriculum;
 
@@ -335,8 +324,6 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
@@ -362,14 +349,13 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
 
     /**
      * Method for deleting a curriculum by setting "Deleted" = 1
+     *
      * @param id
      * @return
      * @throws SQLException
@@ -383,14 +369,13 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
 
     /**
      * Returns the Books in a specific curriculum
+     *
      * @param curriculumID
      * @return
      */
@@ -427,8 +412,6 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return results;
     }
@@ -437,6 +420,7 @@ public class DBConnector {
 
     /**
      * Returns all books that isn't deleted
+     *
      * @return
      * @throws IllegalArgumentException
      */
@@ -472,8 +456,6 @@ public class DBConnector {
             }
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
-        } finally {
-            close();
         }
         return results;
 
@@ -481,6 +463,7 @@ public class DBConnector {
 
     /**
      * Returns a single book
+     *
      * @param id
      * @return
      * @throws IllegalArgumentException
@@ -514,6 +497,7 @@ public class DBConnector {
 
     /**
      * Method used to edit book information
+     *
      * @param id
      * @param data
      * @return
@@ -537,14 +521,13 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
 
     /**
      * Lets you create a new book and adds the book to the BooksCurriculum table.
+     *
      * @param b
      * @return
      * @throws SQLException
@@ -577,8 +560,6 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
 
         return true;
@@ -588,6 +569,7 @@ public class DBConnector {
 
     /**
      * Method for deleting a book.
+     *
      * @param id
      * @return
      * @throws SQLException
@@ -607,14 +589,13 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }
 
     /**
      * Authentiates an user and returns the user's info.
+     *
      * @param username
      * @param password
      * @return
@@ -652,7 +633,8 @@ public class DBConnector {
     }
 
     /**
-     * Used to check if the users token is ecists and is valid.
+     * Used to check if the users token is exists and is valid.
+     *
      * @param token
      * @return
      * @throws SQLException
@@ -665,7 +647,7 @@ public class DBConnector {
         try {
 
             PreparedStatement getUserFromToken = conn
-                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 1 minute)");
+                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 20 minute)");
             getUserFromToken.setString(1, token);
             resultSet = getUserFromToken.executeQuery();
 
@@ -681,7 +663,7 @@ public class DBConnector {
                         resultSet.getBoolean("Usertype"));
 
             }
-            if(userFromToken != null){
+            if (userFromToken != null) {
                 PreparedStatement updateTimeStamp = conn.prepareStatement("UPDATE Tokens set UpdateTs = CURRENT_TIMESTAMP where token = ? ");
                 updateTimeStamp.setString(1, token);
                 updateTimeStamp.executeUpdate();
@@ -703,8 +685,6 @@ public class DBConnector {
             addTokenStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            close();
         }
     }
 
@@ -718,8 +698,6 @@ public class DBConnector {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            close();
         }
         return true;
     }

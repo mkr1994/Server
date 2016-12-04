@@ -1,6 +1,6 @@
 package endpoints;
 
-import javax.ws.rs.core.Response;
+import javax.xml.ws.Response;
 import java.sql.SQLException;
 
 /**

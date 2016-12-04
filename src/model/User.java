@@ -8,11 +8,6 @@ public class User {
     public User(){
 
     }
-
-   /* public User(int userID){
-        this.userID = userID;
-
-    }*/
     public User(String firstName, String lastName, String userName, String email, String password, Boolean userType) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -87,16 +82,6 @@ public class User {
         userType = admin;
     }
 
-    /*
-    @Override
-    public String toString() {
-        return "User{" +
-                "userID=" + userID +
-                ", name='" + firstName + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }*/
 }
 
 

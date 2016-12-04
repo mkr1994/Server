@@ -6,6 +6,9 @@ package Encrypters;
 
 import java.util.Random;
 
+/**
+ * Crypter class used to XOR encryption
+ */
 public class Crypter {
 
 
@@ -20,17 +23,6 @@ public class Crypter {
 
         return output.toString();
     }
-
-    public static String xor() {
-
-        //Eksempel på en hard-codet String, der bliver krypteret
-        String communication = "test123";
-
-        // Returnerer den krypterede værdi.
-        return Crypter.encryptDecryptXOR(communication) + "\n" + Crypter.encryptDecryptXOR
-                (Crypter.encryptDecryptXOR(communication));
-    }
-
 
     public static String buildToken(String chars, int length) {
         Random rand = new Random();

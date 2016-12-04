@@ -37,6 +37,7 @@ public class TokenController {
     public User getUserFromTokens(String token) throws SQLException {
         DBConnector db = new DBConnector();
         User user = db.getUserFromToken(token);
+        db.close();
         return user;
 
     }

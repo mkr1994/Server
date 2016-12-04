@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
 /**
  * Created by magnusrasmussen on 24/11/2016.
  */
@@ -37,6 +38,7 @@ public class AdminView {
                     createNewBook();
                     break;
             }
+
             input.nextLine();
         }
     }
@@ -73,7 +75,6 @@ public class AdminView {
                 System.out.println("Seems like you entered a bad value! Please try again!");
                 inputOk = false;
             }
-            input.nextLine();
         } while (!inputOk);
 
         Book book = new Book(publisher, title, author, version, ISBN, priceAB, priceSAXO, priceCDON);
@@ -123,7 +124,7 @@ public class AdminView {
         email = input.next();
         System.out.println("Enter your password: ");
         password = input.next();
-        System.out.println("Is the new user an admin?");
+        System.out.println("Is the new user an admin? Enter true or false");
         adminStatus = input.nextBoolean();
         User user = new User(firstName, lastName, username, email, password, adminStatus);
         user.setPassword(Digester.hashWithSalt(password));

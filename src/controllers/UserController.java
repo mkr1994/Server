@@ -55,6 +55,7 @@ public class UserController {
     User u = gson.fromJson(data, User.class);
     String hashedPassword = Digester.hashWithSalt(u.getPassword());
     u.setPassword(hashedPassword);
+    db.close();
     return db.addUser(u);
   }
 

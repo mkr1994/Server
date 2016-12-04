@@ -9,12 +9,7 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args){
 
-
-        Config.setDbUrl("localhost");
-        Config.setDbPort("3306");
-        Config.setDbName("Bookit");
-        Config.setDbPassword("1234");
-        Config.setDbUserName("root");
+        setDBDetails();
 
         AdminView adminInterface = new AdminView();
 
@@ -23,5 +18,13 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setDBDetails(){
+        Config.setDbUrl("localhost");
+        Config.setDbPort("3306");
+        Config.setDbName("Bookit");
+        Config.setDbPassword("1234");
+        Config.setDbUserName("root");
     }
 }

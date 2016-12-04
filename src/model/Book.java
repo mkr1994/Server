@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Book model class
+ */
 public class Book {
 
     private int bookID, curriculumID;
@@ -115,12 +118,4 @@ public class Book {
         this.curriculumID = curriculumID;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "model.Book{" +
-//                "name='" + name + '\'' +
-//                ", publisher='" + publisher + '\'' +
-//                ", ISBN='" + ISBN + '\'' +
-//                '}';
-//    }
 }

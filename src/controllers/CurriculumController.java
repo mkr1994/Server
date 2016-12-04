@@ -22,10 +22,10 @@ public class CurriculumController {
     }
 
     public Curriculum getCurriculum(int id) throws SQLException {
-    DBConnector db = new DBConnector();
-    Curriculum curriculum = db.getCurriculum(id);
-    db.close();
-    return curriculum;
+        DBConnector db = new DBConnector();
+        Curriculum curriculum = db.getCurriculum(id);
+        db.close();
+        return curriculum;
     }
 
     public boolean editCurriculum(int id, String data) throws SQLException {
@@ -37,14 +37,14 @@ public class CurriculumController {
 
     public boolean deleteCurriculum(int id) throws SQLException {
         DBConnector db = new DBConnector();
-        boolean deleteCurriculum =  db.deleteCurriculum(id);
+        boolean deleteCurriculum = db.deleteCurriculum(id);
         db.close();
         return deleteCurriculum;
     }
 
     public boolean addCurriculum(String data) throws SQLException {
         DBConnector db = new DBConnector();
-        Curriculum c = new Gson().fromJson(data,Curriculum.class);
+        Curriculum c = new Gson().fromJson(data, Curriculum.class);
         boolean addCurriculum = db.addCurriculum(c);
         db.close();
         return addCurriculum;
@@ -60,7 +60,7 @@ public class CurriculumController {
 
     public boolean addCurriculumBook(String data) throws SQLException {
         DBConnector db = new DBConnector();
-      //  boolean addCurriculumBook = db.addCurriculumBook(data);
+        //  boolean addCurriculumBook = db.addCurriculumBook(data);
         db.close();
         return true;
     }

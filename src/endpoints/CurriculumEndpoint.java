@@ -8,23 +8,24 @@ import model.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.io.Serializable;
 import java.sql.SQLException;
 
 
 /**
  * Created by magnusrasmussen on 17/10/2016.
  */
-//implements IEndpoints HUSK AT ÆNDRE INTERFACET VED PUT
+
 @Path("/curriculum")
-public class CurriculumEndpoint {
+public  class CurriculumEndpoint  {
     CurriculumController curriculumController;
 
-    TokenController tokenController = new TokenController();
+    TokenController tokenController;
 
 
     public CurriculumEndpoint() {
-
-        curriculumController = new CurriculumController();
+        this.curriculumController = new CurriculumController();
+        this.tokenController = new TokenController();
     }
 
 
@@ -44,8 +45,8 @@ public class CurriculumEndpoint {
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculumBooks(curriculumID))))
-                    .header("Access-Control-Allow-Origin", "*") //Skal måske være der
-                    .build(); //kør
+                    .header("Access-Control-Allow-Origin", "*")
+                    .build();
         } else {
             return Response
                     //error response
@@ -69,7 +70,7 @@ public class CurriculumEndpoint {
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculums())))
-                    .header("Access-Control-Allow-Origin", "*") //Skal måske være der
+                    .header("Access-Control-Allow-Origin", "*")
                     .build(); //kør
         } else {
             return Response
@@ -97,7 +98,7 @@ public class CurriculumEndpoint {
             return Response
                     .status(200)
                     .entity(new Gson().toJson(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculum(id)))))
-                    .header("Access-Control-Allow-Origin", "*") //Skal måske være der
+                    .header("Access-Control-Allow-Origin", "*")
                     .build(); //kør
         } else {
             return Response
@@ -129,23 +130,22 @@ public class CurriculumEndpoint {
                         .status(200)
                         .entity("Success!")
                         .build();
-            }
-            else {
+            } else {
                 return Response
                         .status(400)
                         .build();
             }
 
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 
 
 
-   /* @POST
+    @POST
     @Path("/{curriculumID}/book")
     @Produces("application/json")
 
-    public Response create(@HeaderParam("authorization") String authToken, String data) throws Exception {
+    public Response addToCurriculum(@HeaderParam("authorization") String authToken, String data) throws Exception {
 
         User user = tokenController.getUserFromTokens(authToken);
 
@@ -161,15 +161,15 @@ public class CurriculumEndpoint {
             else {
                 return Response
                         .status(400)
-                        //nedenstående skal formentlig laves om. Den skal ikke returne curriculums. Lavet for at checke
-                        //at den skriver til db.
                         .build();
             }
 
         }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
-    }*/
+    }
+
     /**
      * Metode til at ændre et semester
+     *
      * @return
      */
 
@@ -181,37 +181,36 @@ public class CurriculumEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
-            if (curriculumController.getCurriculum(id)!=null) {
-                String s = new Gson().fromJson(data,String.class);
+        if (user != null) {
+            if (curriculumController.getCurriculum(id) != null) {
+                String s = new Gson().fromJson(data, String.class);
                 String decrypt = Crypter.encryptDecryptXOR(s);
                 if (curriculumController.editCurriculum(id, decrypt)) {
                     return Response
                             .status(200)
                             .entity("{\"message\":\"Success! Curriculum was changed.\"}")
                             .build();
-                }
-                else {
+                } else {
                     return Response
                             .status(400)
                             .entity("{\"message\":\"failed\"}")
                             .build();
                 }
 
-            }
-            else {
+            } else {
                 return Response
                         .status(400)
                         .entity("{\"message\":\"failed. Curriculum doesn't exist.\"}")
                         .build();
             }
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
 
     }
 
 
     /**
      * Metode til at slette et semester
+     *
      * @param id
      * @return
      * @throws SQLException
@@ -224,11 +223,10 @@ public class CurriculumEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
-            if(curriculumController.deleteCurriculum(id)) {
+        if (user != null) {
+            if (curriculumController.deleteCurriculum(id)) {
                 return Response.status(200).entity("{\"message\":\"Curriculum was deleted\"}").build();
-            }
-            else return Response.status(400).entity("{\"message\":\"Failed. Curriculum was not deleted\"}").build();
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+            } else return Response.status(400).entity("{\"message\":\"Failed. Curriculum was not deleted\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 }
