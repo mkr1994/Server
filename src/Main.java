@@ -20,6 +20,9 @@ public class Main {
         }
     }
 
+    /**
+     * DB details needed for succesful connection
+     */
     public static void setDBDetails(){
         Config.setDbUrl("localhost");
         Config.setDbPort("3306");

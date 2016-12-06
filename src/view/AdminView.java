@@ -1,7 +1,8 @@
 package view;
 
 import Encrypters.Digester;
-import database.DBConnector;
+import controllers.BookController;
+import controllers.UserController;
 import model.Book;
 import model.User;
 
@@ -12,11 +13,13 @@ import java.util.Scanner;
 
 
 /**
+ * Provides a simple TUI for the admin.
  * Created by magnusrasmussen on 24/11/2016.
  */
 public class AdminView {
 
-    DBConnector dbConnector = new DBConnector();
+    BookController bookController = new BookController();
+    UserController userController = new UserController();
     Scanner input = new Scanner(System.in);
     public void menu() throws SQLException {
 
@@ -79,18 +82,24 @@ public class AdminView {
 
         Book book = new Book(publisher, title, author, version, ISBN, priceAB, priceSAXO, priceCDON);
 
+
         try {
-            dbConnector.addCurriculumBook(book);
+           if(bookController.addBook(book))
+               System.out.println("Book created!");
+            else
+               System.out.println("The book was not created");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public void deleteUser() throws SQLException {
         input.nextLine();
         int userId = 0;
 
-           ArrayList<User> users = dbConnector.getUsers();
+           ArrayList<User> users = userController.getUsers();
         System.out.printf("%-15s %-30s %-30s %-25s %-25s %-15s\n", "User ID:", "Username:", "Firstname:", "Lastname:", "Email:", "Admin status:");
         for (User user : users) {
             System.out.printf("%-15d %-30s %-30s %-25s %-25s %-15b\n", user.getUserID(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getUserType());
@@ -101,7 +110,10 @@ public class AdminView {
         System.out.println("Are you sure you want to delete the account? Write \"yes\" to confirm");
         if (!input.nextLine().equals("yes")) {
             try {
-                dbConnector.deleteUser(userId);
+                if(userController.deleteUser(userId))
+                    System.out.println("The user was deleted!");
+                else
+                    System.out.println("The user wasn't deleted!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -112,6 +124,7 @@ public class AdminView {
     }
     public void createNewUser(){
         input.nextLine();
+
         String firstName, lastName, username, email, password;
         boolean adminStatus;
         System.out.println("Enter your firstname: ");
@@ -135,7 +148,10 @@ public class AdminView {
         System.out.println("Enter \"yes\" to confirm:");
         if (input.next().equals("yes")) {
             try {
-                dbConnector.addUser(user);
+               if(userController.addUser(user))
+                   System.out.println("The user was created!");
+                else
+                   System.out.println("The user wan't created!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -146,7 +162,7 @@ public class AdminView {
     }
 
     public void viewAllUsers() throws SQLException{
-        ArrayList<User> users = dbConnector.getUsers();
+        ArrayList<User> users = userController.getUsers();
         // Header for showing users
         System.out.printf("%-15s %-30s %-30s %-25s %-25s %-15s\n", "User ID:", "Username:", "Firstname:", "Lastname:", "Email:", "Admin status:");
         for (User user : users) {

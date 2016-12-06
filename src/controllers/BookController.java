@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import database.DBConnector;
 import model.Book;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class BookController {
@@ -11,7 +12,7 @@ public class BookController {
 
     public ArrayList<Book> getBooks() throws Exception {
         ArrayList<Book> books = db.getBooks();
-        db.close();
+       // db.close();
         return books;
     }
 
@@ -24,23 +25,47 @@ public class BookController {
 
     public boolean editBook(int id, String data) throws Exception {
         DBConnector db = new DBConnector();
-        boolean editBook = db.editBook(id, data);
+        boolean b = db.editBook(id, data);
         db.close();
-        return editBook;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean deleteBook(int id) throws Exception {
         DBConnector db = new DBConnector();
-        boolean deleteBook = db.deleteBook(id);
+        boolean b = db.deleteBook(id);
         db.close();
-        return deleteBook;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean addBook(String data) throws Exception {
         DBConnector db = new DBConnector();
-        Book b = new Gson().fromJson(data, Book.class);
+        Book book = new Gson().fromJson(data, Book.class);
+        boolean b = db.addCurriculumBook(book);
         db.close();
-        return db.addCurriculumBook(b);
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean addBook(Book book) throws SQLException {
+        DBConnector db = new DBConnector();
+        boolean b = db.addCurriculumBook(book);
+        db.close();
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

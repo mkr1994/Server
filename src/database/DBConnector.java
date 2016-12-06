@@ -21,7 +21,6 @@ public class DBConnector {
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://" + Config.getDbUrl() + ":" + Config.getDbPort() + "/" + Config.getDbName();
-
     //  Database credentials
     static final String USER = Config.getDbUserName();
     static final String PASS = Config.getDbPassword();
@@ -32,29 +31,26 @@ public class DBConnector {
 
     public DBConnector() {
 
+            try {
+                //STEP 2: Register JDBC driver
+                Class.forName(JDBC_DRIVER).newInstance();
 
-        try {
-            //STEP 2: Register JDBC driver
-            Class.forName(JDBC_DRIVER).newInstance();
+                //STEP 3: Open a connection
+                this.conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            //STEP 3: Open a connection
-            this.conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-            //STEP 4: Execute a query
-            this.stmt = conn.createStatement();
-
-            //STEP 6: Clean-up environment
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
+                //STEP 4: Execute a query
+                this.stmt = conn.createStatement();
+                //STEP 6: Clean-up environment
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
     }
 
@@ -92,6 +88,8 @@ public class DBConnector {
 
                 }
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
@@ -135,7 +133,7 @@ public class DBConnector {
                 }
             }
 
-
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
@@ -256,6 +254,8 @@ public class DBConnector {
                     e.printStackTrace();
                 }
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
@@ -293,6 +293,8 @@ public class DBConnector {
 
                 }
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
 
             System.out.println(sqlException.getMessage());
@@ -454,9 +456,13 @@ public class DBConnector {
 
                 }
             }
+            getBooks.close();
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
+
+
         return results;
 
     }
@@ -488,9 +494,12 @@ public class DBConnector {
                     resultSet.getDouble("PriceSAXO"),
                     resultSet.getDouble("PriceCDON")
             );
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
+
         return book;
 
     }
@@ -518,6 +527,8 @@ public class DBConnector {
             editBookStatement.setInt(9, id);
 
             editBookStatement.executeUpdate();
+
+            editBookStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -624,6 +635,8 @@ public class DBConnector {
 
 
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
@@ -647,7 +660,7 @@ public class DBConnector {
         try {
 
             PreparedStatement getUserFromToken = conn
-                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 20 minute)");
+                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 1 minute)");
             getUserFromToken.setString(1, token);
             resultSet = getUserFromToken.executeQuery();
 
@@ -668,6 +681,8 @@ public class DBConnector {
                 updateTimeStamp.setString(1, token);
                 updateTimeStamp.executeUpdate();
             }
+
+            resultSet.close();
         } catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
@@ -705,6 +720,7 @@ public class DBConnector {
     public void close() {
         try {
             this.conn.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -30,31 +30,43 @@ public class CurriculumController {
 
     public boolean editCurriculum(int id, String data) throws SQLException {
         DBConnector db = new DBConnector();
-        boolean editCurriculum = db.editCurriculum(id, data);
+        boolean b = db.editCurriculum(id, data);
         db.close();
-        return editCurriculum;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean deleteCurriculum(int id) throws SQLException {
         DBConnector db = new DBConnector();
-        boolean deleteCurriculum = db.deleteCurriculum(id);
+        boolean b = db.deleteCurriculum(id);
         db.close();
-        return deleteCurriculum;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean addCurriculum(String data) throws SQLException {
         DBConnector db = new DBConnector();
         Curriculum c = new Gson().fromJson(data, Curriculum.class);
-        boolean addCurriculum = db.addCurriculum(c);
+        boolean b = db.addCurriculum(c);
         db.close();
-        return addCurriculum;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public ArrayList<Book> getCurriculumBooks(int curriculumID) throws SQLException {
         DBConnector db = new DBConnector();
-        ArrayList<Book> curricilumBooks = db.getCurriculumBooks(curriculumID);
+        ArrayList<Book> curriculumBooks = db.getCurriculumBooks(curriculumID);
         db.close();
-        return curricilumBooks;
+        return curriculumBooks;
 
     }
 

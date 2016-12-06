@@ -44,9 +44,13 @@ public class TokenController {
 
     public boolean deleteToken(String token) throws SQLException{
         DBConnector db = new DBConnector();
-        boolean deleteToken = db.deleteToken(token);
+        boolean b = db.deleteToken(token);
         db.close();
-        return deleteToken;
+        if (b) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 }
