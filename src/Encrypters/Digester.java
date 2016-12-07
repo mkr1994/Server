@@ -3,6 +3,7 @@ package Encrypters;
 import java.security.MessageDigest;
 
 /**
+ * Class used to hash+salt password
  * Created by madsgade on 17/10/2016.
  */
 

@@ -51,12 +51,5 @@ public class MyApplication extends Application {
       return h;
     }
 
-  @GET
-  @Produces("text/plain")
-  public String demo() {
-    return "This is root!";
-  }
-
-
 }
 

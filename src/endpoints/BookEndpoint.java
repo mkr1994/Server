@@ -13,11 +13,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
-
-// The Java class will be hosted at the URI path "/Book"
-
+/**
+ *
+ The Java class will be hosted at the URI path "/Book" and contains all endpoints related to books
+ */
 @Path("/book")
-public  class BookEndpoint {
+public class BookEndpoint {
 
     BookController controller;
     TokenController tokenController;
@@ -30,7 +31,6 @@ public  class BookEndpoint {
     }
 
     // The Java method will process HTTP GET requests
-
     @GET
     @Produces("application/json")
     public Response get() throws Exception {
@@ -98,7 +98,7 @@ public  class BookEndpoint {
                         .build();
             }
 
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
 
     }
@@ -122,7 +122,7 @@ public  class BookEndpoint {
                         .entity("{\"message\":\"failed\"}")
                         .build();
             }
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
     }
 
 
@@ -137,7 +137,7 @@ public  class BookEndpoint {
             if (controller.deleteBook(bookId)) {
                 return Response.status(200).entity("{\"message\":\"Success! Book deleted\"}").build();
             } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
 
     }

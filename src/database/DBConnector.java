@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
+ * Connection class, used to establish connection to database and containing all relevant sql statements
  * Created by mortenlaursen on 17/10/2016.
  */
 public class DBConnector {
@@ -646,7 +647,7 @@ public class DBConnector {
     }
 
     /**
-     * Used to check if the users token is exists and is valid.
+     * Used to check if the users token exists and is valid.
      *
      * @param token
      * @return
@@ -676,6 +677,8 @@ public class DBConnector {
                         resultSet.getBoolean("Usertype"));
 
             }
+
+            // If the token is valid, the time will be updated
             if (userFromToken != null) {
                 PreparedStatement updateTimeStamp = conn.prepareStatement("UPDATE Tokens set UpdateTs = CURRENT_TIMESTAMP where token = ? ");
                 updateTimeStamp.setString(1, token);
@@ -717,6 +720,9 @@ public class DBConnector {
         return true;
     }
 
+    /**
+     * close connection to database
+     */
     public void close() {
         try {
             this.conn.close();

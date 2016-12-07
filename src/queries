@@ -1,8 +1,0 @@
-select DISTINCT `School` from `Curicullum`
-
-select DISTINCT Education from Curicullum where School = 'CBS'
-
-
-
-
-

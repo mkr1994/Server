@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * Usercontroller used to control all userfunctions.
  * Created by mortenlaursen on 17/10/2016.
  */
 public class UserController {

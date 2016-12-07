@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 
 /**
+ * This endpoint is hosted at the path "curriculum" and contains alle curriculum related functions
  * Created by magnusrasmussen on 17/10/2016.
  */
-
 @Path("/curriculum")
 public  class CurriculumEndpoint  {
     CurriculumController curriculumController;
@@ -31,7 +31,6 @@ public  class CurriculumEndpoint  {
 
     /**
      * Metode til at hente alle bøgerne på et semester
-     *
      * @param curriculumID
      * @return
      * @throws IllegalAccessException
@@ -71,10 +70,9 @@ public  class CurriculumEndpoint  {
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculums())))
                     .header("Access-Control-Allow-Origin", "*")
-                    .build(); //kør
+                    .build();
         } else {
             return Response
-                    //error response
                     .status(400)
                     .entity("{\"message\":\"failed\"}")
                     .build();
@@ -99,10 +97,9 @@ public  class CurriculumEndpoint  {
                     .status(200)
                     .entity(new Gson().toJson(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculum(id)))))
                     .header("Access-Control-Allow-Origin", "*")
-                    .build(); //kør
+                    .build();
         } else {
             return Response
-                    //error response
                     .status(400)
                     .entity("{\"message\":\"failed\"}")
                     .build();
@@ -136,7 +133,7 @@ public  class CurriculumEndpoint  {
                         .build();
             }
 
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
     }
 
 
@@ -164,7 +161,7 @@ public  class CurriculumEndpoint  {
                         .build();
             }
 
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        }else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
     }
 
     /**
@@ -203,7 +200,7 @@ public  class CurriculumEndpoint  {
                         .entity("{\"message\":\"failed. Curriculum doesn't exist.\"}")
                         .build();
             }
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
     }
 
@@ -227,6 +224,6 @@ public  class CurriculumEndpoint  {
             if (curriculumController.deleteCurriculum(id)) {
                 return Response.status(200).entity("{\"message\":\"Curriculum was deleted\"}").build();
             } else return Response.status(400).entity("{\"message\":\"Failed. Curriculum was not deleted\"}").build();
-        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
     }
 }

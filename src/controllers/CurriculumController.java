@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
+ * Logic curriculum controller used for curriculum actions
  * Created by mortenlaursen on 17/10/2016.
  */
 public class CurriculumController {

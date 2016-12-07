@@ -12,13 +12,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
-// implements IEndpoints The Java class will be hosted at the URI path "/users"
+/**
+ *  The Java class will be hosted at the URI path "/users" and contains alle user related endpoints
+ */
 @Path("/user")
 public class UsersEndpoint {
-    UserController controller = new UserController();
-    TokenController tokenController = new TokenController();
+    UserController controller;
+    TokenController tokenController;
 
     public UsersEndpoint() {
+        this.controller = new UserController();
+        this.tokenController = new TokenController();
     }
 
     @GET
@@ -29,7 +33,7 @@ public class UsersEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
+        if (user != null) {
             if (controller.getUsers() != null) {
                 return Response
                         .status(200)
@@ -42,29 +46,30 @@ public class UsersEndpoint {
                         .entity("{\"message\":\"failed\"}")
                         .build();
             }
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
     }
 
-    @GET
+
     // The Java method will produce content identified by the MIME Media type "text/plain"
+    @GET
     @Produces("application/json")
     @Path("/fromToken")
     public Response getFromToken(@HeaderParam("authorization") String authToken) throws SQLException {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
-                return Response
-                        .status(200)
-                        .entity(Crypter.encryptDecryptXOR(new Gson().toJson(user)))
-                        .build();
-            } else {
-                return Response
-                        //error response
-                        .status(400)
-                        .entity("{\"message\":\"failed\"}")
-                        .build();
+        if (user != null) {
+            return Response
+                    .status(200)
+                    .entity(Crypter.encryptDecryptXOR(new Gson().toJson(user)))
+                    .build();
+        } else {
+            return Response
+                    //error response
+                    .status(401)
+                    .entity("{\"message\":\"unauthorized\"}")
+                    .build();
 
         }
 
@@ -77,8 +82,8 @@ public class UsersEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
-            if (controller.getUser(userId)!=null) {
+        if (user != null) {
+            if (controller.getUser(userId) != null) {
                 return Response
                         .status(200)
                         .entity(Crypter.encryptDecryptXOR(new Gson().toJson(controller.getUser(userId))))
@@ -90,8 +95,8 @@ public class UsersEndpoint {
                     .build();
 
         } else return Response
-                .status(400)
-                .entity("{\"message\":\"failed\"}")
+                .status(401)
+                .entity("{\"message\":\"unauthorized\"}")
                 .build();
     }
 
@@ -103,9 +108,9 @@ public class UsersEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
+        if (user != null) {
             String decrypt = Crypter.encryptDecryptXOR(data);
-            User u  = new Gson().fromJson(decrypt,User.class);
+            User u = new Gson().fromJson(decrypt, User.class);
             if (controller.getUser(u.getUserID()) != null) {
                 if (controller.editUser(u)) {
                     return Response
@@ -114,7 +119,7 @@ public class UsersEndpoint {
                             .build();
                 } else {
                     return Response
-                            .status(401)
+                            .status(400)
                             .entity("{\"message\":\"failed\"}")
                             .build();
                 }
@@ -125,7 +130,7 @@ public class UsersEndpoint {
                         .build();
             }
 
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
 
     }
@@ -134,30 +139,26 @@ public class UsersEndpoint {
     @Produces("application/json")
     public Response create(String data) throws Exception {
         String decrypt = Crypter.encryptDecryptXOR(data);
-        //String s = new Gson().fromJson(decrypt,String.class);
 
         if (controller.addUser(decrypt)) {
-            //demo to check if it returns this on post.
             return Response
                     .status(200)
                     .entity("{\"message\":\"Success! User added\"}")
                     .build();
-        }
-        else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 
     @Path("/{id}")
     @DELETE
-    public Response delete (@HeaderParam("authorization") String authToken, @PathParam("id") int userId) throws SQLException {
+    public Response delete(@HeaderParam("authorization") String authToken, @PathParam("id") int userId) throws SQLException {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
-            if(controller.deleteUser(userId)) {
+        if (user != null) {
+            if (controller.deleteUser(userId)) {
                 return Response.status(200).entity("{\"message\":\"Success! User deleted\"}").build();
-            }
-            else return Response.status(400).entity("{\"message\":\"failed\"}").build();
-        }else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+            } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
+        } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
 
 
     }
@@ -170,29 +171,29 @@ public class UsersEndpoint {
 
         User userLogin = new Gson().fromJson(decrypt, User.class);
 
-       String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
+        String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
 
         if (token != null) {
             return Response
-                .status(200).entity(token).build();
+                    .status(200).entity(token).build();
         } else return Response
-            .status(401)
-            .build();
+                .status(401)
+                .build();
     }
 
     @POST
     @Path("/logout")
-    public Response logout (String data) throws SQLException {
-        if(tokenController.deleteToken(data)) {
+    public Response logout(String data) throws SQLException {
+        if (tokenController.deleteToken(data)) {
             return Response
                     .status(200)
                     .entity("Success!")
                     .build();
 
         } else return Response
-                    .status(400)
-                    .entity("Failure")
-                    .build();
+                .status(400)
+                .entity("Failure")
+                .build();
     }
 
 }

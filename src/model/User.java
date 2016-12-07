@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * User model class
+ */
 public class User {
     int userID;
     String firstName, lastName, userName, email, password;

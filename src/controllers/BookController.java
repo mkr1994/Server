@@ -7,6 +7,9 @@ import model.Book;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Logic controller class for all book related methods.
+ */
 public class BookController {
     DBConnector db = new DBConnector();
 

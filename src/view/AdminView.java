@@ -21,10 +21,11 @@ public class AdminView {
     BookController bookController = new BookController();
     UserController userController = new UserController();
     Scanner input = new Scanner(System.in);
+
     public void menu() throws SQLException {
 
 
-        while(true) {
+        while (true) {
             System.out.println("Press 1 to view all users\nPress 2 to create new user\nPress 3 to delete an user\nPress 4 to create new book");
 
             switch (input.nextInt()) {
@@ -46,7 +47,7 @@ public class AdminView {
         }
     }
 
-    public void createNewBook(){
+    public void createNewBook() {
         input.nextLine();
         String publisher = null, title = null, author = null;
         double priceAB = 0, priceSAXO = 0, priceCDON = 0, ISBN = 0;
@@ -84,10 +85,10 @@ public class AdminView {
 
 
         try {
-           if(bookController.addBook(book))
-               System.out.println("Book created!");
+            if (bookController.addBook(book))
+                System.out.println("Book created!");
             else
-               System.out.println("The book was not created");
+                System.out.println("The book was not created");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,7 +100,7 @@ public class AdminView {
         input.nextLine();
         int userId = 0;
 
-           ArrayList<User> users = userController.getUsers();
+        ArrayList<User> users = userController.getUsers();
         System.out.printf("%-15s %-30s %-30s %-25s %-25s %-15s\n", "User ID:", "Username:", "Firstname:", "Lastname:", "Email:", "Admin status:");
         for (User user : users) {
             System.out.printf("%-15d %-30s %-30s %-25s %-25s %-15b\n", user.getUserID(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getUserType());
@@ -110,19 +111,20 @@ public class AdminView {
         System.out.println("Are you sure you want to delete the account? Write \"yes\" to confirm");
         if (!input.nextLine().equals("yes")) {
             try {
-                if(userController.deleteUser(userId))
+                if (userController.deleteUser(userId))
                     System.out.println("The user was deleted!");
                 else
                     System.out.println("The user wasn't deleted!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else{
+        } else {
             System.out.println("You didn't write yes. Returning to menu...");
         }
 
     }
-    public void createNewUser(){
+
+    public void createNewUser() {
         input.nextLine();
 
         String firstName, lastName, username, email, password;
@@ -148,10 +150,10 @@ public class AdminView {
         System.out.println("Enter \"yes\" to confirm:");
         if (input.next().equals("yes")) {
             try {
-               if(userController.addUser(user))
-                   System.out.println("The user was created!");
+                if (userController.addUser(user))
+                    System.out.println("The user was created!");
                 else
-                   System.out.println("The user wan't created!");
+                    System.out.println("The user wan't created!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,7 +163,7 @@ public class AdminView {
 
     }
 
-    public void viewAllUsers() throws SQLException{
+    public void viewAllUsers() throws SQLException {
         ArrayList<User> users = userController.getUsers();
         // Header for showing users
         System.out.printf("%-15s %-30s %-30s %-25s %-25s %-15s\n", "User ID:", "Username:", "Firstname:", "Lastname:", "Email:", "Admin status:");

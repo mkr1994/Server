@@ -7,6 +7,7 @@ import model.User;
 import java.sql.SQLException;
 
 /**
+ * Token controller, used for token related processing
  * Created by Tastum on 19/10/2016.
  */
 public class TokenController {

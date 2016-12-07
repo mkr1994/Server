@@ -7,13 +7,13 @@ package Encrypters;
 import java.util.Random;
 
 /**
- * Crypter class used to XOR encryption
+ * Crypter class used to XOR encryption. https://github.com/KyleBanks/XOREncryption/blob/master/Java%20(Android%20compatible)/XOREncryption.java
  */
 public class Crypter {
 
 
     public static String encryptDecryptXOR(String input) {
-        char[] key = {'M', 'K', 'R'}; //Dette kan være alle andre bogstaver end a,b og c.
+        char[] key = {'M', 'K', 'R'}; //Same key ad the clientside one.
         StringBuilder output = new StringBuilder();
 
         //For loop der scrambler den String, der bliver indtastet
