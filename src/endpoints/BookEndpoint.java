@@ -30,7 +30,7 @@ public class BookEndpoint {
         this.gson = new Gson();
     }
 
-    // The Java method will process HTTP GET requests
+    // The Java method will process HTTP GET requests and returns all books
     @GET
     @Produces("application/json")
     public Response get() throws Exception {
@@ -50,6 +50,7 @@ public class BookEndpoint {
     }
 
 
+    // Returns one specific book
     @Path("/{id}")
     @Produces("application/json")
     @GET
@@ -67,20 +68,20 @@ public class BookEndpoint {
         }
     }
 
+    // Edit one specific book
     @PUT
     @Path("/{bookId}")
     @Produces("application/json")
-
     public Response edit(@HeaderParam("authorization") String authToken, @PathParam("bookId") int id, String data) throws Exception {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
 
-            if (controller.getBook(id) != null) {
+            if (controller.getBook(id) != null) { // Return 400 if book dosn't exist
                 String s = new Gson().fromJson(data, String.class);
                 String decrypt = Crypter.encryptDecryptXOR(s);
-                if (controller.editBook(id, decrypt)) {
+                if (controller.editBook(id, decrypt)) { //Return 400 if edit fails.
                     return Response
                             .status(200)
                             .entity("{\"message\":\"Success! Book edited\"}")
@@ -103,6 +104,7 @@ public class BookEndpoint {
 
     }
 
+    // Create new book
     @POST
     @Produces("application/json")
     public Response create(@HeaderParam("authorization") String authToken, String data) throws Exception {
@@ -110,8 +112,8 @@ public class BookEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (controller.addBook(decrypt)) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (controller.addBook(decrypt)) { //Return 400 if creation doesn't succeed.
                 return Response
                         .status(200)
                         .entity("{\"message\":\"Success! Book created\"}")
@@ -126,15 +128,16 @@ public class BookEndpoint {
     }
 
 
+    // Delete specific book
     @Path("/{id}")
     @DELETE
     public Response delete(@HeaderParam("authorization") String authToken, @PathParam("id") int bookId) throws Exception {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
 
-            if (controller.deleteBook(bookId)) {
+            if (controller.deleteBook(bookId)) { //Return 400 if deletion doesn't succeed.
                 return Response.status(200).entity("{\"message\":\"Success! Book deleted\"}").build();
             } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
         } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();

@@ -35,6 +35,7 @@ public class TokenController {
 
     }
 
+    // Returns userinfo from token.
     public User getUserFromTokens(String token) throws SQLException {
         DBConnector db = new DBConnector();
         User user = db.getUserFromToken(token);
@@ -43,6 +44,7 @@ public class TokenController {
 
     }
 
+    // Deletes a token from the database.
     public boolean deleteToken(String token) throws SQLException{
         DBConnector db = new DBConnector();
         boolean b = db.deleteToken(token);

@@ -40,7 +40,7 @@ public  class CurriculumEndpoint  {
     @Produces("application/json")
     public Response getCurriculumBooks(@PathParam("curriculumID") int curriculumID) throws Exception {
 
-        if (curriculumController.getCurriculum(curriculumID) != null) {
+        if (curriculumController.getCurriculum(curriculumID) != null) { // Return 400 if statement fails
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculumBooks(curriculumID))))
@@ -65,7 +65,7 @@ public  class CurriculumEndpoint  {
     @Produces("application/json")
     public Response get() throws Exception {
 
-        if (curriculumController.getCurriculums() != null) {
+        if (curriculumController.getCurriculums() != null) { // Return 400 if statement fails
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculums())))
@@ -92,7 +92,7 @@ public  class CurriculumEndpoint  {
     public Response get(@PathParam("curriculumID") int id) throws Exception {
 
 
-        if (curriculumController.getCurriculums() != null) {
+        if (curriculumController.getCurriculums() != null) { // Return 400 if statement fails
             return Response
                     .status(200)
                     .entity(new Gson().toJson(Crypter.encryptDecryptXOR(new Gson().toJson(curriculumController.getCurriculum(id)))))
@@ -120,9 +120,9 @@ public  class CurriculumEndpoint  {
         User user = tokenController.getUserFromTokens(authToken);
 
 
-        if (user != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
             String decrypt = Crypter.encryptDecryptXOR(data);
-            if (curriculumController.addCurriculum(decrypt)) {
+            if (curriculumController.addCurriculum(decrypt)) { // Return 400 if statement fails
                 return Response
                         .status(200)
                         .entity("Success!")
@@ -146,10 +146,10 @@ public  class CurriculumEndpoint  {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null){
+        if (user != null){ //Return 401 if user isn't authenticated
             String s = new Gson().fromJson(data,String.class);
             String decrypt = Crypter.encryptDecryptXOR(s);
-            if (curriculumController.addCurriculumBook(decrypt)) {
+            if (curriculumController.addCurriculumBook(decrypt)) { // Return 400 if statement fails
                 return Response
                         .status(200)
                         .entity("Success!")
@@ -178,11 +178,11 @@ public  class CurriculumEndpoint  {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (curriculumController.getCurriculum(id) != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (curriculumController.getCurriculum(id) != null) { // Return 400 if curriculum doesn't exist
                 String s = new Gson().fromJson(data, String.class);
                 String decrypt = Crypter.encryptDecryptXOR(s);
-                if (curriculumController.editCurriculum(id, decrypt)) {
+                if (curriculumController.editCurriculum(id, decrypt)) { //Return 400 if statement fails
                     return Response
                             .status(200)
                             .entity("{\"message\":\"Success! Curriculum was changed.\"}")
@@ -220,8 +220,8 @@ public  class CurriculumEndpoint  {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (curriculumController.deleteCurriculum(id)) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (curriculumController.deleteCurriculum(id)) { //Return 400 if statement fails
                 return Response.status(200).entity("{\"message\":\"Curriculum was deleted\"}").build();
             } else return Response.status(400).entity("{\"message\":\"Failed. Curriculum was not deleted\"}").build();
         } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();

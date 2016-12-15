@@ -19,13 +19,6 @@ public class Digester {
         }
     }
 
-    public static String hash(String str) {
-        if (str == null || str.length() == 0) {
-            throw new IllegalArgumentException("Fejl");
-        }
-        return Digester._hash(str);
-    }
-
     public static String hashWithSalt(String str) {
         if (str == null || str.length() == 0) {
             throw new IllegalArgumentException("Fejl");
@@ -33,10 +26,10 @@ public class Digester {
 
         str = str + Digester.SALT;
 
-        return Digester._hash(str);
+        return Digester.hash(str);
     }
 
-    private static String _hash(String str) {
+    private static String hash(String str) {
         digester.update(str.getBytes());
         byte[] hash = digester.digest();
         StringBuffer hexString = new StringBuffer();

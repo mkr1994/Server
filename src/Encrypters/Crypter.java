@@ -7,7 +7,7 @@ package Encrypters;
 import java.util.Random;
 
 /**
- * Crypter class used to XOR encryption. https://github.com/KyleBanks/XOREncryption/blob/master/Java%20(Android%20compatible)/XOREncryption.java
+ * Crypter class used to XOR encryption. Source: https://github.com/KyleBanks/XOREncryption/blob/master/Java%20(Android%20compatible)/XOREncryption.java
  */
 public class Crypter {
 

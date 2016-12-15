@@ -30,6 +30,7 @@ public class DBConnector {
     Statement stmt = null;
 
 
+    // constructor that opens connection to database
     public DBConnector() {
 
             try {
@@ -56,7 +57,7 @@ public class DBConnector {
     }
 
     /**
-     * Returns all users that isnt deleted
+     * Returns all users that isn't deleted
      *
      * @return
      * @throws IllegalArgumentException
@@ -249,8 +250,6 @@ public class DBConnector {
                     );
 
                     results.add(cul);
-
-                    String test = resultSet.getString("School");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -265,7 +264,7 @@ public class DBConnector {
     }
 
     /**
-     * Methos for returning a single curriculum
+     * Method for returning a single curriculum
      *
      * @param curriculumID
      * @return
@@ -538,7 +537,7 @@ public class DBConnector {
     }
 
     /**
-     * Lets you create a new book and adds the book to the BooksCurriculum table.
+     * Creates a new book and adds the book to the BooksCurriculum table.
      *
      * @param b
      * @return
@@ -559,7 +558,7 @@ public class DBConnector {
             addBookStatement.setString(8, b.getAuthor());
 
             addBookStatement.executeUpdate();
-            ResultSet rs = addBookStatement.getGeneratedKeys();
+            ResultSet rs = addBookStatement.getGeneratedKeys(); //Get the generated id
 
             if (rs.next()) {
                 id = rs.getInt(1);
@@ -606,7 +605,7 @@ public class DBConnector {
     }
 
     /**
-     * Authentiates an user and returns the user's info.
+     * Authenticates an user and returns the users info.
      *
      * @param username
      * @param password
@@ -661,7 +660,7 @@ public class DBConnector {
         try {
 
             PreparedStatement getUserFromToken = conn
-                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 1 minute)");
+                    .prepareStatement("select Tokens.user_id, Users.Usertype, Users.UserID, Users.First_Name, Users.Last_Name, Users.Username, Users.Email, Users.Password from Tokens inner join Users on Tokens.user_id = Users.UserID where Tokens.token = ? and Tokens.UpdateTs >= DATE_SUB(NOW(), interval 20 minute)");
             getUserFromToken.setString(1, token);
             resultSet = getUserFromToken.executeQuery();
 
@@ -678,7 +677,7 @@ public class DBConnector {
 
             }
 
-            // If the token is valid, the time will be updated
+            // If the token is valid, the timestamp will be updated
             if (userFromToken != null) {
                 PreparedStatement updateTimeStamp = conn.prepareStatement("UPDATE Tokens set UpdateTs = CURRENT_TIMESTAMP where token = ? ");
                 updateTimeStamp.setString(1, token);

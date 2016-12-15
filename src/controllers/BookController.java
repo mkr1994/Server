@@ -15,7 +15,6 @@ public class BookController {
 
     public ArrayList<Book> getBooks() throws Exception {
         ArrayList<Book> books = db.getBooks();
-       // db.close();
         return books;
     }
 

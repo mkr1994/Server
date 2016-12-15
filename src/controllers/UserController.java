@@ -62,7 +62,7 @@ public class UserController {
 
     public boolean addUser(String data) throws Exception {
         User u = gson.fromJson(data, User.class);
-        String hashedPassword = Digester.hashWithSalt(u.getPassword());
+        String hashedPassword = Digester.hashWithSalt(u.getPassword()); //hash the passsword
         u.setPassword(hashedPassword);
         boolean b = db.addUser(u);
         db.close();
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     public boolean addUser(User user) throws Exception {
-        String hashedPassword = Digester.hashWithSalt(user.getPassword());
+        String hashedPassword = Digester.hashWithSalt(user.getPassword()); //Hash the password
         user.setPassword(hashedPassword);
         boolean b = db.addUser(user);
         db.close();

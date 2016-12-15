@@ -26,22 +26,21 @@ public class UsersEndpoint {
     }
 
     @GET
-    // The Java method will produce content identified by the MIME Media type "text/plain"
+    // The Java method will produce content identified by the MIME Media type "text/plain" and returns all users
     @Produces("application/json")
 
     public Response get(@HeaderParam("authorization") String authToken) throws SQLException {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (controller.getUsers() != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (controller.getUsers() != null) { //Returns 400 if no users exists
                 return Response
                         .status(200)
                         .entity(Crypter.encryptDecryptXOR(new Gson().toJson(controller.getUsers())))
                         .build();
             } else {
                 return Response
-                        //error response
                         .status(400)
                         .entity("{\"message\":\"failed\"}")
                         .build();
@@ -51,7 +50,7 @@ public class UsersEndpoint {
     }
 
 
-    // The Java method will produce content identified by the MIME Media type "text/plain"
+    // Methpd returns a single users from token id.
     @GET
     @Produces("application/json")
     @Path("/fromToken")
@@ -59,7 +58,7 @@ public class UsersEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
             return Response
                     .status(200)
                     .entity(Crypter.encryptDecryptXOR(new Gson().toJson(user)))
@@ -75,6 +74,7 @@ public class UsersEndpoint {
 
     }
 
+    // Method returns 1 specific user
     @Path("/{id}")
     @Produces("application/json")
     @GET
@@ -82,8 +82,8 @@ public class UsersEndpoint {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (controller.getUser(userId) != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (controller.getUser(userId) != null) { //Return 400 if statement fails
                 return Response
                         .status(200)
                         .entity(Crypter.encryptDecryptXOR(new Gson().toJson(controller.getUser(userId))))
@@ -100,19 +100,19 @@ public class UsersEndpoint {
                 .build();
     }
 
+    // Edit specific user
     @PUT
     @Path("/{Id}")
     @Produces("application/json")
-
     public Response edit(@HeaderParam("authorization") String authToken, @PathParam("Id") int id, String data) throws SQLException {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
+        if (user != null) { //Return 401 if user isn't authenticated
             String decrypt = Crypter.encryptDecryptXOR(data);
             User u = new Gson().fromJson(decrypt, User.class);
-            if (controller.getUser(u.getUserID()) != null) {
-                if (controller.editUser(u)) {
+            if (controller.getUser(u.getUserID()) != null) { // return 400 if user doesn't exist
+                if (controller.editUser(u)) { //return 400 if statement fails
                     return Response
                             .status(200)
                             .entity("{\"message\":\"Success! User edited\"}")
@@ -135,12 +135,13 @@ public class UsersEndpoint {
 
     }
 
+    // Create new user
     @POST
     @Produces("application/json")
     public Response create(String data) throws Exception {
         String decrypt = Crypter.encryptDecryptXOR(data);
 
-        if (controller.addUser(decrypt)) {
+        if (controller.addUser(decrypt)) { //Return 400 if statement fails
             return Response
                     .status(200)
                     .entity("{\"message\":\"Success! User added\"}")
@@ -148,14 +149,15 @@ public class UsersEndpoint {
         } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
     }
 
+    // delete user
     @Path("/{id}")
     @DELETE
     public Response delete(@HeaderParam("authorization") String authToken, @PathParam("id") int userId) throws SQLException {
 
         User user = tokenController.getUserFromTokens(authToken);
 
-        if (user != null) {
-            if (controller.deleteUser(userId)) {
+        if (user != null) { //Return 401 if user isn't authenticated
+            if (controller.deleteUser(userId)) { //return 400 if statement fails
                 return Response.status(200).entity("{\"message\":\"Success! User deleted\"}").build();
             } else return Response.status(400).entity("{\"message\":\"failed\"}").build();
         } else return Response.status(401).entity("{\"message\":\"unauthorized\"}").build();
@@ -163,6 +165,7 @@ public class UsersEndpoint {
 
     }
 
+    // Login method that returns a token on successful login.
     @POST
     @Path("/login")
     @Produces("application/json")
@@ -173,7 +176,7 @@ public class UsersEndpoint {
 
         String token = tokenController.authenticate(userLogin.getUserName(), userLogin.getPassword());
 
-        if (token != null) {
+        if (token != null) { //Return 401 if user isn't authenticated
             return Response
                     .status(200).entity(token).build();
         } else return Response
@@ -181,6 +184,7 @@ public class UsersEndpoint {
                 .build();
     }
 
+    // Logout that deletes  token from database
     @POST
     @Path("/logout")
     public Response logout(String data) throws SQLException {

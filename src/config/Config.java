@@ -1,5 +1,8 @@
 package config;
 
+/**
+ * Database connectivity configuration
+ */
 public class Config {
 
   private static String dbUserName;
